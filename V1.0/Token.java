@@ -1,3 +1,5 @@
+import com.github.weisj.jsvg.parser.css.impl.Token;
+
 public class Token {
     private String lexema;
     private String classe;
@@ -9,7 +11,7 @@ public class Token {
         this.linha = linha;
     }
 
-    public String getLexema() {
+    public String getLexema(){
         return lexema;
     }
 

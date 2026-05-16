@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <title>Documentário: Analisador Léxico em Java</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 2.2cm 2cm;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: #172033;
+      background: #ffffff;
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 12.2pt;
+      line-height: 1.55;
+    }
+
+    h1, h2, h3 {
+      color: #0f3557;
+      line-height: 1.2;
+      margin: 0 0 0.55rem;
+    }
+
+    h1 {
+      font-size: 30pt;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      font-size: 18pt;
+      margin-top: 1.2rem;
+      padding-bottom: 0.18rem;
+      border-bottom: 1px solid #b7c5d4;
+    }
+
+    h3 {
+      font-size: 14pt;
+      margin-top: 0.9rem;
+    }
+
+    p {
+      margin: 0 0 0.65rem;
+    }
+
+    ul, ol {
+      margin-top: 0.25rem;
+      margin-bottom: 0.75rem;
+      padding-left: 1.25rem;
+    }
+
+    li {
+      margin: 0.18rem 0;
+    }
+
+    code, pre {
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    pre {
+      background: #f3f6fa;
+      border: 1px solid #d4dde8;
+      border-radius: 6px;
+      padding: 0.7rem;
+      overflow: hidden;
+      white-space: pre-wrap;
+      font-size: 10.5pt;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.7rem 0 1rem;
+      font-size: 10.5pt;
+    }
+
+    th, td {
+      border: 1px solid #c7d3df;
+      padding: 0.42rem 0.5rem;
+      vertical-align: top;
+    }
+
+    th {
+      background: #eaf1f8;
+      color: #0f3557;
+      text-align: left;
+    }
+
+    .cover {
+      min-height: 25cm;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border: 2px solid #0f3557;
+      padding: 2.4cm 1.5cm;
+      text-align: center;
+      page-break-after: always;
+    }
+
+    .cover .subtitle {
+      margin-top: 1rem;
+      font-size: 16pt;
+      color: #334b63;
+    }
+
+    .cover .meta {
+      margin-top: 2.2rem;
+      font-size: 12pt;
+      color: #4a5b6b;
+    }
+
+    .callout {
+      border-left: 5px solid #1d6ea7;
+      background: #eef6fc;
+      padding: 0.75rem 0.9rem;
+      margin: 0.8rem 0 1rem;
+    }
+
+    .page-break {
+      page-break-before: always;
+    }
+
+    .small {
+      font-size: 10.5pt;
+      color: #4d5d6c;
+    }
+  </style>
+</head>
+<body>
+  <section class="cover">
+    <h1>Documentário Técnico</h1>
+    <p class="subtitle">Analisador Léxico em Java para Mini Pascal</p>
+    <p class="meta">
+      Um estudo simples e completo sobre a primeira fase de um compilador,
+      explicado para estudantes, professores e pessoas sem experiência em programação.
+    </p>
+    <p class="meta">
+      Projeto: Editor e Analisador Léxico<br>
+      Linguagem usada: Java<br>
+      Interface: Java Swing
+    </p>
+  </section>
+
+  <h2>1. Início: Por que este projeto existe?</h2>
+  <p>
+    Antes de um computador executar um programa, ele precisa compreender o texto escrito pelo programador.
+    Para uma pessoa, uma linha como <code>idade := 18;</code> pode parecer simples. Para o computador, porém,
+    esse texto precisa ser dividido em partes menores e classificadas. Essa primeira divisão é chamada
+    <strong>análise léxica</strong>.
+  </p>
+  <p>
+    Este projeto nasceu com a ideia de criar um editor simples, feito em Java, capaz de receber código inspirado
+    em Mini Pascal e mostrar quais elementos existem dentro desse código. O sistema identifica palavras
+    reservadas, identificadores, números, operadores, símbolos, comentários, textos e possíveis erros léxicos.
+  </p>
+
+  <div class="callout">
+    <strong>Significado central:</strong> o analisador léxico funciona como um leitor inicial do código.
+    Ele não interpreta todo o programa, mas separa o texto em peças organizadas chamadas tokens.
+  </div>
+
+  <h2>2. O que é um token?</h2>
+  <p>
+    Um token é uma unidade reconhecida dentro de um programa. Podemos comparar com uma frase em português:
+    antes de entender o significado completo da frase, precisamos reconhecer as palavras, sinais de pontuação
+    e números. Na programação acontece algo semelhante.
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Exemplo no código</th>
+        <th>Tipo de token</th>
+        <th>Significado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>program</code></td>
+        <td>Palavra reservada</td>
+        <td>Palavra que já pertence à linguagem e tem função definida.</td>
+      </tr>
+      <tr>
+        <td><code>idade</code></td>
+        <td>Identificador</td>
+        <td>Nome criado pelo programador para variável, função ou outro elemento.</td>
+      </tr>
+      <tr>
+        <td><code>18</code></td>
+        <td>Número inteiro</td>
+        <td>Valor numérico sem parte decimal.</td>
+      </tr>
+      <tr>
+        <td><code>15.75</code></td>
+        <td>Número real</td>
+        <td>Valor numérico com parte decimal.</td>
+      </tr>
+      <tr>
+        <td><code>:=</code></td>
+        <td>Atribuição</td>
+        <td>Símbolo usado para guardar um valor em uma variável.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>3. O que o analisador léxico faz?</h2>
+  <p>
+    O analisador léxico percorre o código caractere por caractere. Ele observa letras, números, espaços,
+    símbolos e quebras de linha. Quando encontra um padrão conhecido, cria um token e guarda informações como:
+  </p>
+  <ul>
+    <li>o texto encontrado, chamado lexema;</li>
+    <li>a classe do token, como identificador ou palavra reservada;</li>
+    <li>o padrão reconhecido;</li>
+    <li>uma descrição compreensível;</li>
+    <li>a linha onde o token aparece.</li>
+  </ul>
+
+  <p>
+    Exemplo de entrada:
+  </p>
+  <pre>program Escola;
+var
+  idade: integer;
+begin
+  idade := 18;
+end.</pre>
+
+  <p>
+    Parte da saída esperada:
+  </p>
+  <table>
+    <thead>
+      <tr>
+        <th>Lexema</th>
+        <th>Classe</th>
+        <th>Descrição</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>program</code></td>
+        <td>PALAVRA_RESERVADA</td>
+        <td>Palavra com significado fixo na linguagem.</td>
+      </tr>
+      <tr>
+        <td><code>Escola</code></td>
+        <td>IDENTIFICADOR</td>
+        <td>Nome definido pelo programador.</td>
+      </tr>
+      <tr>
+        <td><code>idade</code></td>
+        <td>IDENTIFICADOR</td>
+        <td>Nome definido pelo programador.</td>
+      </tr>
+      <tr>
+        <td><code>integer</code></td>
+        <td>PALAVRA_RESERVADA</td>
+        <td>Palavra com significado fixo na linguagem.</td>
+      </tr>
+      <tr>
+        <td><code>:=</code></td>
+        <td>ATRIBUICAO</td>
+        <td>Atribuição de valor.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>4. Palavras reservadas</h2>
+  <p>
+    Palavras reservadas são palavras que pertencem à linguagem e não devem ser usadas livremente como nomes
+    comuns. Elas representam comandos, tipos, estruturas de decisão, estruturas de repetição ou valores especiais.
+  </p>
+  <p>
+    O projeto reconhece palavras como:
+  </p>
+  <pre>program, const, type, var, array, of, record, begin, end,
+integer, real, boolean, char, string, if, then, else, while,
+do, for, to, downto, repeat, until, read, readln, write,
+writeln, div, mod, and, or, not, true, false, function, procedure</pre>
+  <p>
+    No editor, essas palavras aparecem coloridas para facilitar a leitura visual do código. Isso ajuda o aluno
+    a perceber rapidamente quais termos pertencem à linguagem.
+  </p>
+
+  <h2>5. Identificadores</h2>
+  <p>
+    Identificadores são nomes criados pelo programador. Eles podem representar variáveis, funções, procedimentos
+    ou outros elementos. No projeto, o padrão usado para identificadores é:
+  </p>
+  <pre>letra (letra | digito | _)*</pre>
+  <p>
+    Isso significa que o nome deve começar com uma letra. Depois da primeira letra, pode conter letras, números
+    ou sublinhado.
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Identificador</th>
+        <th>Válido?</th>
+        <th>Motivo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>idade</code></td>
+        <td>Sim</td>
+        <td>Começa com letra e contém apenas letras.</td>
+      </tr>
+      <tr>
+        <td><code>valor1</code></td>
+        <td>Sim</td>
+        <td>Começa com letra e termina com número.</td>
+      </tr>
+      <tr>
+        <td><code>nome_aluno</code></td>
+        <td>Sim</td>
+        <td>Usa sublinhado após iniciar com letra.</td>
+      </tr>
+      <tr>
+        <td><code>1idade</code></td>
+        <td>Não como identificador único</td>
+        <td>Começa com número, por isso será separado em número e identificador.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>6. Comentários</h2>
+  <p>
+    Comentários são textos escritos para explicar o código aos seres humanos. Eles não mudam o funcionamento
+    do programa. O analisador reconhece três formas de comentário:
+  </p>
+  <pre>{ comentario em Pascal }
+(* outro comentario em Pascal *)
+// comentario de uma linha</pre>
+  <p>
+    Reconhecer comentários é importante porque evita que o analisador trate palavras explicativas como comandos
+    ou identificadores reais do programa.
+  </p>
+
+  <h2>7. Números, textos e símbolos</h2>
+  <p>
+    O sistema reconhece números inteiros, números reais, textos entre aspas simples, operadores aritméticos,
+    operadores relacionais e símbolos de organização.
+  </p>
+  <table>
+    <thead>
+      <tr>
+        <th>Categoria</th>
+        <th>Exemplos</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Número inteiro</td>
+        <td><code>0</code>, <code>18</code>, <code>2026</code></td>
+      </tr>
+      <tr>
+        <td>Número real</td>
+        <td><code>10.5</code>, <code>15.75</code>, <code>3.14</code></td>
+      </tr>
+      <tr>
+        <td>Texto</td>
+        <td><code>'Aluno maior de idade'</code></td>
+      </tr>
+      <tr>
+        <td>Operadores</td>
+        <td><code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>=</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;&gt;</code></td>
+      </tr>
+      <tr>
+        <td>Símbolos</td>
+        <td><code>;</code>, <code>:</code>, <code>,</code>, <code>.</code>, <code>(</code>, <code>)</code>, <code>[</code>, <code>]</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>8. Erros léxicos</h2>
+  <p>
+    Um erro léxico acontece quando aparece no código um caractere ou uma sequência que o analisador não consegue
+    reconhecer pelas regras definidas. Por exemplo, se a linguagem não aceitar o símbolo <code>@</code>, ele será
+    sinalizado como inválido.
+  </p>
+  <p>
+    O projeto também detecta situações como:
+  </p>
+  <ul>
+    <li>comentário iniciado com <code>{</code> e não fechado com <code>}</code>;</li>
+    <li>comentário iniciado com <code>(*</code> e não fechado com <code>*)</code>;</li>
+    <li>texto iniciado com aspas simples e não fechado corretamente;</li>
+    <li>símbolos que não pertencem ao conjunto reconhecido.</li>
+  </ul>
+
+  <h2>9. Como a interface ajuda o estudante?</h2>
+  <p>
+    A interface foi construída para funcionar como um ambiente de aprendizagem. O estudante pode escrever código,
+    executar a análise e observar imediatamente a tabela de tokens. Isso transforma um conceito abstrato em algo
+    visual e manipulável.
+  </p>
+  <ul>
+    <li>O editor permite escrever ou abrir código.</li>
+    <li>As palavras reservadas são destacadas em cor diferente.</li>
+    <li>O botão de análise mostra os tokens em tabela.</li>
+    <li>A aba de erros mostra problemas encontrados no código.</li>
+    <li>O botão de exemplo carrega um programa pronto.</li>
+    <li>A exportação permite guardar os resultados para estudo ou entrega.</li>
+  </ul>
+
+  <h2>10. Impacto na sociedade escolar</h2>
+  <p>
+    O projeto pode impactar positivamente a sociedade escolar porque aproxima estudantes de conceitos fundamentais
+    de compiladores e linguagens de programação. Em vez de estudar apenas teoria, o aluno pode ver na prática como
+    o computador começa a ler um programa.
+  </p>
+  <p>
+    Para professores, a ferramenta pode servir como apoio em aulas de programação, lógica, compiladores ou
+    introdução à ciência da computação. Para estudantes iniciantes, ela reduz a distância entre o texto do código
+    e a estrutura interna que uma máquina precisa construir.
+  </p>
+
+  <div class="callout">
+    <strong>Valor educativo:</strong> o sistema não substitui o professor, mas torna visível uma etapa que
+    normalmente fica escondida. Isso facilita explicações, demonstrações e exercícios.
+  </div>
+
+  <h2>11. Limitações atuais</h2>
+  <p>
+    É importante apresentar o projeto com honestidade técnica. Ele realiza análise léxica, mas ainda não realiza
+    análise sintática nem análise semântica.
+  </p>
+  <table>
+    <thead>
+      <tr>
+        <th>Fase</th>
+        <th>Estado no projeto</th>
+        <th>Explicação simples</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Análise léxica</td>
+        <td>Implementada</td>
+        <td>Divide o código em tokens e encontra erros de símbolos ou sequências inválidas.</td>
+      </tr>
+      <tr>
+        <td>Análise sintática</td>
+        <td>Não implementada</td>
+        <td>Não verifica se os tokens estão na ordem correta segundo a gramática.</td>
+      </tr>
+      <tr>
+        <td>Análise semântica</td>
+        <td>Não implementada</td>
+        <td>Não verifica significado, tipos de dados, variáveis declaradas ou compatibilidade.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+    Por exemplo, o analisador pode reconhecer os tokens de uma linha incorreta, mas ainda não sabe dizer se a
+    frase completa está gramaticalmente correta:
+  </p>
+  <pre>var idade integer</pre>
+  <p>
+    Lexicamente, existem tokens reconhecíveis. Sintaticamente, porém, pode faltar o símbolo <code>:</code>.
+    Essa verificação pertence a uma próxima fase.
+  </p>
+
+  <h2>12. Próximos passos possíveis</h2>
+  <p>
+    Para evoluir o projeto, os próximos passos naturais seriam:
+  </p>
+  <ol>
+    <li>criar uma gramática simples de Mini Pascal;</li>
+    <li>implementar um analisador sintático para verificar a ordem correta dos tokens;</li>
+    <li>criar uma tabela de símbolos para guardar variáveis declaradas;</li>
+    <li>implementar análise semântica para verificar tipos e uso de variáveis;</li>
+    <li>gerar mensagens de erro mais próximas das mensagens de compiladores reais.</li>
+  </ol>
+
+  <h2>13. Fim: conclusão</h2>
+  <p>
+    Este projeto representa a primeira fase de um compilador: a análise léxica. Ele transforma código escrito
+    em Mini Pascal em uma lista organizada de tokens, mostrando o lexema, a classe, o padrão, a descrição e a
+    linha onde cada elemento aparece.
+  </p>
+  <p>
+    Mesmo não sendo ainda um compilador completo, o projeto tem valor pedagógico. Ele mostra como um computador
+    começa a compreender código e ajuda estudantes a entenderem a diferença entre texto comum e estruturas
+    reconhecidas por uma linguagem de programação.
+  </p>
+  <p>
+    O fim deste trabalho não deve ser visto como encerramento definitivo, mas como uma base. A partir da análise
+    léxica, torna-se possível avançar para análise sintática, análise semântica e, futuramente, para um compilador
+    ou interpretador mais completo.
+  </p>
+
+  <p class="small">
+    Documento gerado para acompanhar o projeto de Editor e Analisador Léxico em Java.
+  </p>
+</body>
+</html>

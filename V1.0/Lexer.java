@@ -1,3 +1,5 @@
+import java.util.StringTokenizer;
+
 import java.util.*;
 
 public class Lexer {
@@ -13,7 +15,7 @@ public class Lexer {
             "program", "var", "begin", "end", "integer", "boolean", "char",
             "if", "then", "else", "while", "do", "read", "write",
             "array", "of", "div", "or", "and", "not", "true", "false",
-            "function", "procedure"
+            "function", "procedure","Soares"
     );
 
     public Lexer(String codigo) {
