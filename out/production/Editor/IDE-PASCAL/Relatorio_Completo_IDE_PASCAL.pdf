@@ -1,0 +1,1181 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [5 0 R 7 0 R 9 0 R 11 0 R 13 0 R 15 0 R 17 0 R 19 0 R 21 0 R 23 0 R 25 0 R] /Count 11 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Length 1933 >>
+stream
+BT
+/F1 10 Tf
+50 800 Td
+13 TL
+(Relatorio Completo - IDE Pascal e Analisador Lexico) Tj
+T*
+() Tj
+T*
+(Relatorio Tecnico Completo) Tj
+T*
+() Tj
+T*
+(IDE Pascal e Analisador Lexico em Java) Tj
+T*
+() Tj
+T*
+(Documentacao do codigo-fonte da pasta IDE-PASCAL) Tj
+T*
+() Tj
+T*
+(Arquivos estudados: Clone.java, Lexer.java e Token.java) Tj
+T*
+() Tj
+T*
+(Linguagem: Java | Interface: Java Swing | Tema: Analise Lexica de Mini Pascal) Tj
+T*
+() Tj
+T*
+(Gerado para estudo do funcionamento, metodos e implementacao do projeto.) Tj
+T*
+() Tj
+T*
+(1. Visao geral do projeto) Tj
+T*
+() Tj
+T*
+(O projeto implementa uma pequena IDE para escrever codigo inspirado em Pascal e) Tj
+T*
+(executar uma analise lexica.) Tj
+T*
+(A analise lexica e a primeira etapa de um compilador: ela le o texto do programa,) Tj
+T*
+(divide esse texto em) Tj
+T*
+(partes menores chamadas tokens e classifica cada parte.) Tj
+T*
+() Tj
+T*
+(A aplicacao possui editor de codigo, numeracao de linhas, menus de arquivo, botoes) Tj
+T*
+(de acao, destaque de) Tj
+T*
+(sintaxe, tabela de tokens, tabela de erros, exportacao de resultado e uma funcao) Tj
+T*
+(opcional de sugestao com IA) Tj
+T*
+(local usando Ollama.) Tj
+T*
+() Tj
+T*
+(Ideia central: o usuario escreve codigo Pascal no editor. Ao clicar em analisar, a) Tj
+T*
+(classe) Tj
+T*
+(Clone envia o texto para Lexer. O Lexer percorre o texto e cria objetos) Tj
+T*
+(Token. A interface mostra os tokens e os erros encontrados.) Tj
+T*
+() Tj
+T*
+(2. Organizacao dos arquivos) Tj
+T*
+() Tj
+T*
+(| Arquivo | Responsabilidade) Tj
+T*
+() Tj
+T*
+(| Token.java) Tj
+T*
+(| Modelo de dados que representa cada token reconhecido pelo analisador.) Tj
+T*
+() Tj
+T*
+(| Lexer.java) Tj
+T*
+(| Motor da analise lexica. Le o codigo caractere por caractere, reconhece padroes e registra) Tj
+T*
+(erros.) Tj
+T*
+() Tj
+T*
+(| Clone.java) Tj
+T*
+(| Interface grafica da IDE. Contem editor, menus, tabelas, temas, acoes de arquivo e integracao) Tj
+T*
+(com o lexer.) Tj
+T*
+() Tj
+T*
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 4 0 R >>
+endobj
+6 0 obj
+<< /Length 1924 >>
+stream
+BT
+/F1 10 Tf
+50 800 Td
+13 TL
+(| Documentario_Analisador_Lexico.html) Tj
+T*
+(| Documento explicativo anterior do projeto. Este novo relatorio aprofunda a leitura do codigo.) Tj
+T*
+() Tj
+T*
+(3. Como o sistema funciona) Tj
+T*
+() Tj
+T*
+(- O usuario digita ou abre um arquivo Pascal no editor.) Tj
+T*
+() Tj
+T*
+(- A interface monitora mudancas para atualizar o titulo, status e destaque visual.) Tj
+T*
+() Tj
+T*
+(- Quando a acao acaoAnalisar\(\) e executada, o texto do editor e passado ao) Tj
+T*
+(construtor de Lexer.) Tj
+T*
+() Tj
+T*
+(- O metodo analisar\(\) do Lexer percorre o codigo e decide qual metodo de) Tj
+T*
+(reconhecimento chamar.) Tj
+T*
+() Tj
+T*
+(- Os tokens criados sao armazenados em uma lista de Token.) Tj
+T*
+() Tj
+T*
+(- Os erros, como simbolos invalidos ou comentarios nao fechados, sao guardados em) Tj
+T*
+(uma lista de mensagens.) Tj
+T*
+() Tj
+T*
+(- A classe Clone atualiza as tabelas de tokens e erros para o usuario estudar o) Tj
+T*
+(resultado.) Tj
+T*
+() Tj
+T*
+(4. Classe Token.java) Tj
+T*
+() Tj
+T*
+(A classe Token e simples, mas fundamental. Ela guarda as informacoes produzidas) Tj
+T*
+(pelo analisador) Tj
+T*
+(lexico. Cada token possui lexema, classe, padrao, descricao e linha.) Tj
+T*
+() Tj
+T*
+(| Atributo | Significado) Tj
+T*
+() Tj
+T*
+(| lexema | Texto real encontrado no codigo, por exemplo program, idade ou :=.) Tj
+T*
+() Tj
+T*
+(| classe | Categoria do token, como PALAVRA_RESERVADA, IDENTIFICADOR ou NUMERO_INTEIRO.) Tj
+T*
+() Tj
+T*
+(| padrao | Regra ou forma geral que descreve o token reconhecido.) Tj
+T*
+() Tj
+T*
+(| descricao | Explicacao amigavel para exibir na interface e no relatorio exportado.) Tj
+T*
+() Tj
+T*
+(| linha | Numero da linha onde o token foi encontrado.) Tj
+T*
+() Tj
+T*
+(Metodos de Token) Tj
+T*
+() Tj
+T*
+(| Metodo | O que faz) Tj
+T*
+() Tj
+T*
+(| Token\(String lexema, String classe, int linha\) | Construtor reduzido. Cria um token sem) Tj
+T*
+(padrao e sem descricao.) Tj
+T*
+() Tj
+T*
+ET
+endstream
+endobj
+7 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 6 0 R >>
+endobj
+8 0 obj
+<< /Length 2232 >>
+stream
+BT
+/F1 10 Tf
+50 800 Td
+13 TL
+(| Token\(String lexema, String classe, String padrao, int linha\) | Construtor intermediario.) Tj
+T*
+(Cria um token com padrao, mas sem descricao.) Tj
+T*
+() Tj
+T*
+(| Token\(String lexema, String classe, String padrao, String descricao, int linha\) | Construtor) Tj
+T*
+(completo. Inicializa todos os campos do token.) Tj
+T*
+() Tj
+T*
+(| getLexema\(\), getClasse\(\), getPadrao\(\), getDescricao\(\), getLinha\(\) | Metodos de acesso usados) Tj
+T*
+(pela interface para preencher tabelas e relatorios.) Tj
+T*
+() Tj
+T*
+(| toString\(\) | Retorna uma representacao textual curta do token, util para debug.) Tj
+T*
+() Tj
+T*
+(5. Classe Lexer.java) Tj
+T*
+() Tj
+T*
+(A classe Lexer contem o analisador lexico propriamente dito. Ela recebe uma string) Tj
+T*
+(com o codigo) Tj
+T*
+(inteiro e usa dois contadores principais: pos, que indica a posicao atual no) Tj
+T*
+(texto, e) Tj
+T*
+(linha, que indica a linha atual. Tambem possui duas listas: tokens e erros.) Tj
+T*
+() Tj
+T*
+(Palavras reservadas) Tj
+T*
+() Tj
+T*
+(O conjunto PALAVRAS_RESERVADAS lista termos da linguagem Pascal que nao devem ser) Tj
+T*
+(classificados) Tj
+T*
+(como nomes comuns. Exemplos: program, var, begin, end,) Tj
+T*
+(if, while, function e procedure.) Tj
+T*
+() Tj
+T*
+(Fluxo principal da analise) Tj
+T*
+() Tj
+T*
+(while \(pos < codigo.length\(\)\) {) Tj
+T*
+(char atual = codigo.charAt\(pos\);) Tj
+T*
+() Tj
+T*
+(if \(Character.isWhitespace\(atual\)\) consumirEspaco\(\);) Tj
+T*
+(else if \(atual == '{'\) reconhecerComentarioChaves\(\);) Tj
+T*
+(else if \(atual == '\(' && proximoEh\('*'\)\) reconhecerComentarioParenteses\(\);) Tj
+T*
+(else if \(atual == '/' && proximoEh\('/'\)\) reconhecerComentarioLinha\(\);) Tj
+T*
+(else if \(Character.isLetter\(atual\)\) reconhecerIdentificadorOuReservada\(\);) Tj
+T*
+(else if \(Character.isDigit\(atual\)\) reconhecerNumero\(\);) Tj
+T*
+(else if \(atual == '\\''\) reconhecerString\(\);) Tj
+T*
+(else reconhecerSimbolo\(\);) Tj
+T*
+(}) Tj
+T*
+() Tj
+T*
+(Metodos de Lexer) Tj
+T*
+() Tj
+T*
+(| Metodo | O que faz | Como foi implementado) Tj
+T*
+() Tj
+T*
+(| Lexer\(String codigo\)) Tj
+T*
+(| Recebe o codigo que sera analisado.) Tj
+T*
+(| Guarda a string no atributo codigo. A analise real so comeca em analisar\(\).) Tj
+T*
+ET
+endstream
+endobj
+9 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 8 0 R >>
+endobj
+10 0 obj
+<< /Length 2239 >>
+stream
+BT
+/F1 10 Tf
+50 800 Td
+13 TL
+() Tj
+T*
+(| analisar\(\)) Tj
+T*
+(| Executa a analise lexica completa.) Tj
+T*
+(| Limpa listas anteriores, reinicia pos e linha, percorre todo o texto e chama metodos) Tj
+T*
+(especificos conforme o caractere atual. No fim adiciona o token EOF.) Tj
+T*
+() Tj
+T*
+(| consumirEspaco\(\)) Tj
+T*
+(| Ignora espacos, tabs e quebras de linha.) Tj
+T*
+(| Se encontrar \\n, incrementa o contador de linha. Depois avanca uma posicao.) Tj
+T*
+() Tj
+T*
+(| reconhecerIdentificadorOuReservada\(\)) Tj
+T*
+(| Reconhece palavras e nomes definidos pelo programador.) Tj
+T*
+(| Monta um texto enquanto houver letra, digito ou sublinhado. Depois compara a versao minuscula) Tj
+T*
+(com PALAVRAS_RESERVADAS.) Tj
+T*
+() Tj
+T*
+(| reconhecerNumero\(\)) Tj
+T*
+(| Reconhece numeros inteiros e reais.) Tj
+T*
+(| Primeiro consome digitos. Se encontrar ponto seguido de digito e nao for intervalo ..,) Tj
+T*
+(continua consumindo a parte decimal e classifica como real.) Tj
+T*
+() Tj
+T*
+(| reconhecerString\(\)) Tj
+T*
+(| Reconhece textos delimitados por aspas simples.) Tj
+T*
+(| Comeca na aspa inicial, acumula caracteres ate a aspa final e registra erro se chegar em) Tj
+T*
+(quebra de linha ou fim do codigo sem fechar.) Tj
+T*
+() Tj
+T*
+(| reconhecerComentarioChaves\(\)) Tj
+T*
+(| Reconhece comentarios no formato { ... }.) Tj
+T*
+(| Consome caracteres ate encontrar }. Atualiza linha em quebras de linha. Se nao fechar,) Tj
+T*
+(registra erro.) Tj
+T*
+() Tj
+T*
+(| reconhecerComentarioParenteses\(\)) Tj
+T*
+(| Reconhece comentarios no formato \(* ... *\).) Tj
+T*
+(| Avanca duas posicoes para pular \(* , procura a sequencia *\) e registra erro se nao encontrar.) Tj
+T*
+() Tj
+T*
+(| reconhecerComentarioLinha\(\)) Tj
+T*
+(| Reconhece comentarios iniciados por //.) Tj
+T*
+(| Consome caracteres ate a quebra de linha. Esse comentario termina automaticamente no fim da) Tj
+T*
+(linha.) Tj
+T*
+() Tj
+T*
+(| reconhecerSimbolo\(\)) Tj
+T*
+(| Reconhece operadores e separadores.) Tj
+T*
+(| Usa switch para tratar +, -, *, /, =, <, >, :, ., virgula, ponto e virgula, parenteses e) Tj
+T*
+(colchetes.) Tj
+T*
+() Tj
+T*
+(| adicionarSimbolo\(\)) Tj
+T*
+(| Adiciona token de simbolo simples.) Tj
+T*
+(| Cria um Token com linha atual e avanca pos em uma unidade.) Tj
+T*
+() Tj
+T*
+ET
+endstream
+endobj
+11 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 10 0 R >>
+endobj
+12 0 obj
+<< /Length 2039 >>
+stream
+BT
+/F1 10 Tf
+50 800 Td
+13 TL
+(| adicionarSimboloDuplo\(\)) Tj
+T*
+(| Adiciona token composto por dois caracteres.) Tj
+T*
+(| Cria um Token e avanca pos em duas unidades. Usado para <=, <>, >=, := e ...) Tj
+T*
+() Tj
+T*
+(| proximoEh\(char esperado\)) Tj
+T*
+(| Verifica o proximo caractere sem avancar a leitura.) Tj
+T*
+(| Confere se existe posicao seguinte e se ela contem o caractere esperado.) Tj
+T*
+() Tj
+T*
+(| getErros\(\)) Tj
+T*
+(| Retorna a lista de erros encontrados.) Tj
+T*
+(| Devolve uma nova lista para evitar alteracao direta da lista interna.) Tj
+T*
+() Tj
+T*
+(| isPalavraReservada\(String palavra\)) Tj
+T*
+(| Informa se uma palavra pertence ao conjunto reservado.) Tj
+T*
+(| Converte para minusculas e consulta o conjunto PALAVRAS_RESERVADAS.) Tj
+T*
+() Tj
+T*
+(| getPalavrasReservadas\(\)) Tj
+T*
+(| Retorna as palavras reservadas cadastradas.) Tj
+T*
+(| Usa Collections.unmodifiableSet para impedir alteracao externa do conjunto.) Tj
+T*
+() Tj
+T*
+(6. Classes e metodos de Clone.java) Tj
+T*
+() Tj
+T*
+(A classe Clone e a janela principal da IDE. Ela estende JFrame, que e a classe do) Tj
+T*
+(Swing) Tj
+T*
+(usada para criar janelas. Esse arquivo concentra a interface visual e as acoes do) Tj
+T*
+(usuario.) Tj
+T*
+() Tj
+T*
+(Atributos principais) Tj
+T*
+() Tj
+T*
+(| Atributo | Funcao) Tj
+T*
+() Tj
+T*
+(| editorArea | Area principal onde o usuario escreve o codigo.) Tj
+T*
+() Tj
+T*
+(| lineNumberPanel | Painel lateral que desenha os numeros das linhas do editor.) Tj
+T*
+() Tj
+T*
+(| statusLabel, posLabel, fileLabel | Labels da barra de status, posicao do cursor e arquivo) Tj
+T*
+(atual.) Tj
+T*
+() Tj
+T*
+(| tokenTableModel, errorTableModel | Modelos de dados das tabelas de tokens e erros.) Tj
+T*
+() Tj
+T*
+(| ultimosTokens, ultimosErros | Guardam o resultado mais recente da analise.) Tj
+T*
+() Tj
+T*
+(| currentFile, modified | Controlam o arquivo aberto e se ha alteracoes nao salvas.) Tj
+T*
+() Tj
+T*
+(| undoManager | Controla desfazer e refazer no editor.) Tj
+T*
+() Tj
+T*
+(| currentTheme | Tema visual aplicado na interface.) Tj
+T*
+() Tj
+T*
+ET
+endstream
+endobj
+13 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 12 0 R >>
+endobj
+14 0 obj
+<< /Length 2199 >>
+stream
+BT
+/F1 10 Tf
+50 800 Td
+13 TL
+(| aplicandoDestaque | Evita loop ao aplicar destaque de sintaxe no documento.) Tj
+T*
+() Tj
+T*
+(Classes internas) Tj
+T*
+() Tj
+T*
+(| Classe interna | Responsabilidade) Tj
+T*
+() Tj
+T*
+(| Theme | Guarda as cores de um tema: fundo, painel, texto, borda, palavras-chave, numeros,) Tj
+T*
+(strings e comentarios.) Tj
+T*
+() Tj
+T*
+(| ClassePillRenderer | Renderizador personalizado para exibir a classe do token com aparencia) Tj
+T*
+(de etiqueta colorida na tabela.) Tj
+T*
+() Tj
+T*
+(| LineNumberPanel | Painel que calcula e desenha os numeros das linhas ao lado do editor.) Tj
+T*
+() Tj
+T*
+(Metodos de construcao da interface) Tj
+T*
+() Tj
+T*
+(| Metodo | O que faz) Tj
+T*
+() Tj
+T*
+(| Clone\(\) | Construtor da janela. Define titulo, tamanho, comportamento de fechamento, tema) Tj
+T*
+(inicial, monta a interface e registra eventos.) Tj
+T*
+() Tj
+T*
+(| buildUI\(\) | Organiza a estrutura principal da janela: barra de titulo, area de trabalho e) Tj
+T*
+(barra de status.) Tj
+T*
+() Tj
+T*
+(| buildTitleBar\(\) | Cria a barra superior com titulo, menu e controles principais.) Tj
+T*
+() Tj
+T*
+(| buildMenuBar\(\) | Cria menus como Arquivo, Editar, Exibir e Ajuda, ligando cada item a uma) Tj
+T*
+(acao.) Tj
+T*
+() Tj
+T*
+(| menu\(\), menuItem\(\) | Metodos auxiliares para criar menus e itens de menu com estilo padrao.) Tj
+T*
+() Tj
+T*
+(| styleMenu\(\), styleMenuItem\(\) | Aplicam fonte e aparencia consistente aos menus.) Tj
+T*
+() Tj
+T*
+(| buildWorkspace\(\) | Monta a area central com barra lateral, editor e resultados.) Tj
+T*
+() Tj
+T*
+(| buildSidebar\(\) | Cria botoes laterais para funcoes rapidas, como novo, abrir, salvar e) Tj
+T*
+(analisar.) Tj
+T*
+() Tj
+T*
+(| sidebarBtn\(\), sidebarSep\(\) | Criam botoes e separadores reutilizaveis para a barra lateral.) Tj
+T*
+() Tj
+T*
+(| buildEditorSection\(\) | Monta o bloco do editor, incluindo aba, barra compacta e painel de) Tj
+T*
+(texto.) Tj
+T*
+() Tj
+T*
+(| buildEditorTabBar\(\) | Mostra a area visual de aba do arquivo aberto.) Tj
+T*
+() Tj
+T*
+(| buildCompactToolbar\(\) | Cria botoes de execucao, exportacao, fonte, tema e IA.) Tj
+T*
+() Tj
+T*
+(| tbBtn\(\), tbDiv\(\) | Auxiliares para botoes e divisores da barra de ferramentas.) Tj
+T*
+ET
+endstream
+endobj
+15 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 14 0 R >>
+endobj
+16 0 obj
+<< /Length 2034 >>
+stream
+BT
+/F1 10 Tf
+50 800 Td
+13 TL
+() Tj
+T*
+(| buildEditorPane\(\) | Cria o JTextPane, adiciona numeracao de linha, scroll e listeners de) Tj
+T*
+(mudanca.) Tj
+T*
+() Tj
+T*
+(| buildResultsSection\(\) | Monta a regiao inferior/lateral onde aparecem tokens e erros.) Tj
+T*
+() Tj
+T*
+(| buildResultsTabs\(\) | Cria abas para tabela de tokens e tabela de erros, com campos de) Tj
+T*
+(pesquisa.) Tj
+T*
+() Tj
+T*
+(| buildStyledTable\(\) | Cria uma tabela Swing com estilos padronizados e sem edicao direta.) Tj
+T*
+() Tj
+T*
+(| buildStatusBar\(\) | Cria a barra inferior de status com informacoes de arquivo, cursor, tokens) Tj
+T*
+(e erros.) Tj
+T*
+() Tj
+T*
+(Metodos de filtragem, navegacao e resultados) Tj
+T*
+() Tj
+T*
+(| Metodo | O que faz) Tj
+T*
+() Tj
+T*
+(| filtrarTokens\(\) | Filtra a tabela de tokens de acordo com o texto digitado no campo de) Tj
+T*
+(pesquisa.) Tj
+T*
+() Tj
+T*
+(| filtrarErros\(\) | Filtra a tabela de erros usando o texto de busca.) Tj
+T*
+() Tj
+T*
+(| irParaErroSelecionado\(\) | Quando o usuario seleciona um erro, tenta mover o cursor para a) Tj
+T*
+(linha correspondente.) Tj
+T*
+() Tj
+T*
+(| extrairEIrParaLinhaDoErro\(String erro\) | Extrai o numero da linha da mensagem de erro e chama) Tj
+T*
+(irParaLinha\(\).) Tj
+T*
+() Tj
+T*
+(| irParaLinha\(int linha\) | Calcula a posicao inicial da linha no documento e posiciona o cursor) Tj
+T*
+(do editor.) Tj
+T*
+() Tj
+T*
+(| atualizarResultados\(\) | Preenche as tabelas com os tokens e erros da ultima analise.) Tj
+T*
+() Tj
+T*
+(| limparResultados\(\) | Remove linhas das tabelas e zera contadores quando nao ha analise) Tj
+T*
+(valida.) Tj
+T*
+() Tj
+T*
+(Metodos de arquivo e acoes do usuario) Tj
+T*
+() Tj
+T*
+(| Metodo | O que faz) Tj
+T*
+() Tj
+T*
+(| acaoNovo\(\) | Cria um novo documento, depois de confirmar descarte de alteracoes se) Tj
+T*
+(necessario.) Tj
+T*
+() Tj
+T*
+(| acaoAbrir\(\) | Abre um arquivo escolhido pelo usuario e carrega seu conteudo no editor.) Tj
+T*
+() Tj
+T*
+(| acaoSalvar\(\) | Salva no arquivo atual. Se nao houver arquivo, chama acaoSalvarComo\(\).) Tj
+T*
+() Tj
+T*
+ET
+endstream
+endobj
+17 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 16 0 R >>
+endobj
+18 0 obj
+<< /Length 2217 >>
+stream
+BT
+/F1 10 Tf
+50 800 Td
+13 TL
+(| acaoSalvarComo\(\) | Abre seletor de arquivo para o usuario escolher onde salvar.) Tj
+T*
+() Tj
+T*
+(| acaoSair\(\) | Fecha a aplicacao apos confirmar se existem mudancas nao salvas.) Tj
+T*
+() Tj
+T*
+(| buildFileChooser\(\) | Configura o seletor de arquivos usado para abrir e salvar.) Tj
+T*
+() Tj
+T*
+(| acaoAnalisar\(\) | Pega o texto do editor, cria um Lexer, executa analisar\(\), guarda tokens e) Tj
+T*
+(erros e atualiza a interface.) Tj
+T*
+() Tj
+T*
+(| acaoCarregarExemplo\(\) | Insere no editor um exemplo de codigo Mini Pascal para teste rapido.) Tj
+T*
+() Tj
+T*
+(| acaoExportarResultado\(\) | Exporta o resultado da analise para arquivo, usando o texto) Tj
+T*
+(produzido por gerarRelatorio\(\).) Tj
+T*
+() Tj
+T*
+(| gerarRelatorio\(\) | Monta o conteudo textual/CSV com tokens e erros da ultima analise.) Tj
+T*
+() Tj
+T*
+(| csv\(String s\) | Prepara texto para ser salvo em formato CSV, tratando aspas e separadores.) Tj
+T*
+() Tj
+T*
+(Metodos de aparencia, fonte e destaque) Tj
+T*
+() Tj
+T*
+(| Metodo | O que faz) Tj
+T*
+() Tj
+T*
+(| resolveFont\(String name, int size\) | Escolhe uma fonte monoespacada disponivel ou usa) Tj
+T*
+(alternativa padrao.) Tj
+T*
+() Tj
+T*
+(| updateEditorFont\(\) | Aplica nome e tamanho da fonte atual no editor e atualiza a numeracao.) Tj
+T*
+() Tj
+T*
+(| changeFontSize\(int delta\) | Aumenta ou diminui o tamanho da fonte.) Tj
+T*
+() Tj
+T*
+(| dialogFontSize\(\) | Abre uma janela para informar tamanho da fonte manualmente.) Tj
+T*
+() Tj
+T*
+(| applyTheme\(Theme t\) | Aplica cores do tema no editor, paines, tabelas e componentes da) Tj
+T*
+(interface.) Tj
+T*
+() Tj
+T*
+(| applyThemeToTable\(JTable table, Theme t\) | Aplica cores e selecao visual em uma tabela) Tj
+T*
+(especifica.) Tj
+T*
+() Tj
+T*
+(| destacarPalavrasReservadas\(\) | Aplica coloracao no editor para palavras reservadas, numeros,) Tj
+T*
+(strings e comentarios.) Tj
+T*
+() Tj
+T*
+(| attr\(Color fg, boolean bold, boolean italic\) | Cria um conjunto de atributos de texto para) Tj
+T*
+(destaque.) Tj
+T*
+() Tj
+T*
+(| highlight\(...\) | Procura padroes por expressao regular e aplica estilo no trecho encontrado.) Tj
+T*
+() Tj
+T*
+(Metodos de estado e utilidade) Tj
+T*
+() Tj
+T*
+(| Metodo | O que faz) Tj
+T*
+ET
+endstream
+endobj
+19 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 18 0 R >>
+endobj
+20 0 obj
+<< /Length 2214 >>
+stream
+BT
+/F1 10 Tf
+50 800 Td
+13 TL
+() Tj
+T*
+(| onChange\(\) | Executado quando o texto muda. Marca o arquivo como modificado, atualiza titulo,) Tj
+T*
+(posicao e destaque.) Tj
+T*
+() Tj
+T*
+(| updatePosition\(\) | Calcula linha e coluna atuais do cursor e mostra na barra de status.) Tj
+T*
+() Tj
+T*
+(| updateTitle\(\) | Atualiza o titulo da janela, incluindo marcador de modificacao quando o) Tj
+T*
+(arquivo nao foi salvo.) Tj
+T*
+() Tj
+T*
+(| setStatus\(String msg\) | Mostra uma mensagem curta na barra de status.) Tj
+T*
+() Tj
+T*
+(| confirmarDescarte\(\) | Pergunta ao usuario se deseja descartar alteracoes nao salvas.) Tj
+T*
+() Tj
+T*
+(| erro\(String msg\) | Mostra uma caixa de mensagem de erro.) Tj
+T*
+() Tj
+T*
+(| main\(String[] args\) | Ponto de entrada do programa. Inicializa a interface Swing.) Tj
+T*
+() Tj
+T*
+(Metodos de IA local) Tj
+T*
+() Tj
+T*
+(| Metodo | O que faz) Tj
+T*
+() Tj
+T*
+(| sugerirCorrecaoComIA\(\)) Tj
+T*
+(| Cria um prompt com o codigo e os erros encontrados, chama o modelo local e mostra sugestoes) Tj
+T*
+(ao usuario.) Tj
+T*
+() Tj
+T*
+(| chamarLLM\(String prompt\)) Tj
+T*
+(| Envia uma requisicao HTTP para http://localhost:11434/api/generate, usando o modelo) Tj
+T*
+(codellama:7b. Depende do Ollama estar rodando localmente.) Tj
+T*
+() Tj
+T*
+(7. Como a implementacao foi pensada) Tj
+T*
+() Tj
+T*
+(A implementacao separa a logica da analise lexica da interface grafica. Essa) Tj
+T*
+(divisao e importante porque) Tj
+T*
+(Lexer pode ser estudado e testado sem depender do Swing, enquanto Clone fica) Tj
+T*
+(responsavel por mostrar dados e receber a interacao do usuario.) Tj
+T*
+() Tj
+T*
+(O Lexer usa uma tecnica comum em compiladores simples: leitura sequencial com um) Tj
+T*
+(indice.) Tj
+T*
+(Em vez de tentar interpretar o programa completo, ele olha apenas o caractere) Tj
+T*
+(atual e, quando necessario,) Tj
+T*
+(olha o proximo caractere com proximoEh\(\). Isso permite reconhecer simbolos) Tj
+T*
+(compostos como) Tj
+T*
+(:=, <= e ...) Tj
+T*
+() Tj
+T*
+(A interface foi implementada com Swing porque ele ja oferece componentes prontos,) Tj
+T*
+(como JFrame,) Tj
+T*
+(JTextPane, JTable, JMenuBar, JScrollPane e) Tj
+T*
+(JFileChooser. O codigo personaliza esses componentes para parecer uma IDE: editor) Tj
+T*
+ET
+endstream
+endobj
+21 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 20 0 R >>
+endobj
+22 0 obj
+<< /Length 1601 >>
+stream
+BT
+/F1 10 Tf
+50 800 Td
+13 TL
+(com fonte) Tj
+T*
+(monoespacada, numeracao de linhas, temas escuros, barra lateral e tabelas de) Tj
+T*
+(resultados.) Tj
+T*
+() Tj
+T*
+(8. Exemplo de entrada e saida) Tj
+T*
+() Tj
+T*
+(Codigo de entrada:) Tj
+T*
+() Tj
+T*
+(program Escola;) Tj
+T*
+(var) Tj
+T*
+(idade: integer;) Tj
+T*
+(begin) Tj
+T*
+(idade := 18;) Tj
+T*
+(end.) Tj
+T*
+() Tj
+T*
+(Tokens esperados:) Tj
+T*
+() Tj
+T*
+(| Lexema | Classe | Descricao) Tj
+T*
+() Tj
+T*
+(| program | PALAVRA_RESERVADA | Palavra com significado fixo.) Tj
+T*
+() Tj
+T*
+(| Escola | IDENTIFICADOR | Nome criado pelo programador.) Tj
+T*
+() Tj
+T*
+(| idade | IDENTIFICADOR | Nome criado pelo programador.) Tj
+T*
+() Tj
+T*
+(| integer | PALAVRA_RESERVADA | Tipo inteiro da linguagem.) Tj
+T*
+() Tj
+T*
+(| := | ATRIBUICAO | Atribuicao de valor.) Tj
+T*
+() Tj
+T*
+(| 18 | NUMERO_INTEIRO | Numero sem parte decimal.) Tj
+T*
+() Tj
+T*
+(| EOF | FIM_ARQUIVO | Marcador de fim da entrada.) Tj
+T*
+() Tj
+T*
+(9. Pontos fortes e limitacoes) Tj
+T*
+() Tj
+T*
+(| Pontos fortes | Limitacoes) Tj
+T*
+() Tj
+T*
+(| Codigo dividido em modelo, analisador e interface.) Tj
+T*
+(| A analise e apenas lexica; nao valida gramatica completa do Pascal.) Tj
+T*
+() Tj
+T*
+(| Reconhece palavras reservadas, identificadores, numeros, strings, comentarios, operadores e) Tj
+T*
+(separadores.) Tj
+T*
+(| Strings usam regra simples e nao tratam todos os escapes possiveis.) Tj
+T*
+() Tj
+T*
+(| Mostra erros com linha e permite navegar ate a linha do erro.) Tj
+T*
+(| A sugestao por IA depende de Ollama local e do modelo instalado.) Tj
+T*
+() Tj
+T*
+(| Interface facilita estudo visual dos tokens.) Tj
+T*
+ET
+endstream
+endobj
+23 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 22 0 R >>
+endobj
+24 0 obj
+<< /Length 879 >>
+stream
+BT
+/F1 10 Tf
+50 800 Td
+13 TL
+(| O arquivo Clone.java concentra muitas responsabilidades e poderia ser dividido em classes) Tj
+T*
+(menores.) Tj
+T*
+() Tj
+T*
+(10. Conclusao) Tj
+T*
+() Tj
+T*
+(O projeto e uma boa base didatica para entender a primeira fase de um compilador.) Tj
+T*
+(A classe Lexer) Tj
+T*
+(mostra como transformar texto bruto em tokens classificados. A classe Token) Tj
+T*
+(organiza os dados de) Tj
+T*
+(cada unidade reconhecida. A classe Clone transforma tudo isso em uma ferramenta) Tj
+T*
+(visual, permitindo) Tj
+T*
+(escrever codigo, executar a analise, ver resultados, filtrar informacoes, exportar) Tj
+T*
+(relatorios e estudar erros.) Tj
+T*
+() Tj
+T*
+(Para evoluir o projeto, o proximo passo natural seria criar um analisador) Tj
+T*
+(sintatico, responsavel por verificar) Tj
+T*
+(se a ordem dos tokens forma comandos validos segundo a gramatica da linguagem.) Tj
+T*
+ET
+endstream
+endobj
+25 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 24 0 R >>
+endobj
+xref
+0 26
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000190 00000 n 
+0000000260 00000 n 
+0000002245 00000 n 
+0000002371 00000 n 
+0000004347 00000 n 
+0000004473 00000 n 
+0000006757 00000 n 
+0000006883 00000 n 
+0000009175 00000 n 
+0000009303 00000 n 
+0000011395 00000 n 
+0000011523 00000 n 
+0000013775 00000 n 
+0000013903 00000 n 
+0000015990 00000 n 
+0000016118 00000 n 
+0000018388 00000 n 
+0000018516 00000 n 
+0000020783 00000 n 
+0000020911 00000 n 
+0000022565 00000 n 
+0000022693 00000 n 
+0000023624 00000 n 
+trailer
+<< /Size 26 /Root 1 0 R >>
+startxref
+23752
+%%EOF

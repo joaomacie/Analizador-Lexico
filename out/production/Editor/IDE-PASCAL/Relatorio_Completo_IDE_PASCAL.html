@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <title>Relatorio Completo - IDE Pascal e Analisador Lexico</title>
+  <style>
+    @page { size: A4; margin: 1.8cm 1.7cm; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: #1b2430;
+      background: white;
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 11.5pt;
+      line-height: 1.5;
+    }
+    h1, h2, h3 { color: #103a5c; line-height: 1.2; margin: 0 0 .55rem; }
+    h1 { font-size: 28pt; }
+    h2 { font-size: 17pt; margin-top: 1.15rem; border-bottom: 1px solid #b8c8d8; padding-bottom: .18rem; }
+    h3 { font-size: 13pt; margin-top: .85rem; color: #174c76; }
+    p { margin: 0 0 .65rem; }
+    ul, ol { margin-top: .2rem; margin-bottom: .7rem; padding-left: 1.25rem; }
+    li { margin: .18rem 0; }
+    code, pre { font-family: Consolas, "Courier New", monospace; }
+    pre { background: #f5f7fa; border: 1px solid #d8e0ea; border-radius: 6px; padding: .65rem; white-space: pre-wrap; font-size: 9.7pt; }
+    table { width: 100%; border-collapse: collapse; margin: .65rem 0 .95rem; font-size: 9.6pt; page-break-inside: avoid; }
+    th, td { border: 1px solid #c6d2df; padding: .38rem .45rem; vertical-align: top; }
+    th { background: #eaf2f9; color: #103a5c; text-align: left; }
+    .cover {
+      min-height: 25cm;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+      border: 2px solid #103a5c;
+      padding: 2cm 1.3cm;
+      page-break-after: always;
+    }
+    .subtitle { font-size: 15pt; color: #354b5f; margin-top: .8rem; }
+    .meta { color: #526273; margin-top: 1.4rem; }
+    .callout { border-left: 5px solid #1d6ea7; background: #eef6fc; padding: .7rem .85rem; margin: .75rem 0 .95rem; }
+    .page-break { page-break-before: always; }
+    .small { color: #5a6673; font-size: 9.7pt; }
+  </style>
+</head>
+<body>
+  <section class="cover">
+    <h1>Relatorio Tecnico Completo</h1>
+    <p class="subtitle">IDE Pascal e Analisador Lexico em Java</p>
+    <p class="meta">
+      Documentacao do codigo-fonte da pasta <strong>IDE-PASCAL</strong><br>
+      Arquivos estudados: <code>Clone.java</code>, <code>Lexer.java</code> e <code>Token.java</code><br>
+      Linguagem: Java | Interface: Java Swing | Tema: Analise Lexica de Mini Pascal
+    </p>
+    <p class="meta small">Gerado para estudo do funcionamento, metodos e implementacao do projeto.</p>
+  </section>
+
+  <h2>1. Visao geral do projeto</h2>
+  <p>
+    O projeto implementa uma pequena IDE para escrever codigo inspirado em Pascal e executar uma analise lexica.
+    A analise lexica e a primeira etapa de um compilador: ela le o texto do programa, divide esse texto em
+    partes menores chamadas <strong>tokens</strong> e classifica cada parte.
+  </p>
+  <p>
+    A aplicacao possui editor de codigo, numeracao de linhas, menus de arquivo, botoes de acao, destaque de
+    sintaxe, tabela de tokens, tabela de erros, exportacao de resultado e uma funcao opcional de sugestao com IA
+    local usando Ollama.
+  </p>
+
+  <div class="callout">
+    <strong>Ideia central:</strong> o usuario escreve codigo Pascal no editor. Ao clicar em analisar, a classe
+    <code>Clone</code> envia o texto para <code>Lexer</code>. O <code>Lexer</code> percorre o texto e cria objetos
+    <code>Token</code>. A interface mostra os tokens e os erros encontrados.
+  </div>
+
+  <h2>2. Organizacao dos arquivos</h2>
+  <table>
+    <thead>
+      <tr><th>Arquivo</th><th>Responsabilidade</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>Token.java</code></td>
+        <td>Modelo de dados que representa cada token reconhecido pelo analisador.</td>
+      </tr>
+      <tr>
+        <td><code>Lexer.java</code></td>
+        <td>Motor da analise lexica. Le o codigo caractere por caractere, reconhece padroes e registra erros.</td>
+      </tr>
+      <tr>
+        <td><code>Clone.java</code></td>
+        <td>Interface grafica da IDE. Contem editor, menus, tabelas, temas, acoes de arquivo e integracao com o lexer.</td>
+      </tr>
+      <tr>
+        <td><code>Documentario_Analisador_Lexico.html</code></td>
+        <td>Documento explicativo anterior do projeto. Este novo relatorio aprofunda a leitura do codigo.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>3. Como o sistema funciona</h2>
+  <ol>
+    <li>O usuario digita ou abre um arquivo Pascal no editor.</li>
+    <li>A interface monitora mudancas para atualizar o titulo, status e destaque visual.</li>
+    <li>Quando a acao <code>acaoAnalisar()</code> e executada, o texto do editor e passado ao construtor de <code>Lexer</code>.</li>
+    <li>O metodo <code>analisar()</code> do <code>Lexer</code> percorre o codigo e decide qual metodo de reconhecimento chamar.</li>
+    <li>Os tokens criados sao armazenados em uma lista de <code>Token</code>.</li>
+    <li>Os erros, como simbolos invalidos ou comentarios nao fechados, sao guardados em uma lista de mensagens.</li>
+    <li>A classe <code>Clone</code> atualiza as tabelas de tokens e erros para o usuario estudar o resultado.</li>
+  </ol>
+
+  <h2>4. Classe Token.java</h2>
+  <p>
+    A classe <code>Token</code> e simples, mas fundamental. Ela guarda as informacoes produzidas pelo analisador
+    lexico. Cada token possui lexema, classe, padrao, descricao e linha.
+  </p>
+  <table>
+    <thead>
+      <tr><th>Atributo</th><th>Significado</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>lexema</code></td><td>Texto real encontrado no codigo, por exemplo <code>program</code>, <code>idade</code> ou <code>:=</code>.</td></tr>
+      <tr><td><code>classe</code></td><td>Categoria do token, como <code>PALAVRA_RESERVADA</code>, <code>IDENTIFICADOR</code> ou <code>NUMERO_INTEIRO</code>.</td></tr>
+      <tr><td><code>padrao</code></td><td>Regra ou forma geral que descreve o token reconhecido.</td></tr>
+      <tr><td><code>descricao</code></td><td>Explicacao amigavel para exibir na interface e no relatorio exportado.</td></tr>
+      <tr><td><code>linha</code></td><td>Numero da linha onde o token foi encontrado.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Metodos de Token</h3>
+  <table>
+    <thead>
+      <tr><th>Metodo</th><th>O que faz</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>Token(String lexema, String classe, int linha)</code></td><td>Construtor reduzido. Cria um token sem padrao e sem descricao.</td></tr>
+      <tr><td><code>Token(String lexema, String classe, String padrao, int linha)</code></td><td>Construtor intermediario. Cria um token com padrao, mas sem descricao.</td></tr>
+      <tr><td><code>Token(String lexema, String classe, String padrao, String descricao, int linha)</code></td><td>Construtor completo. Inicializa todos os campos do token.</td></tr>
+      <tr><td><code>getLexema()</code>, <code>getClasse()</code>, <code>getPadrao()</code>, <code>getDescricao()</code>, <code>getLinha()</code></td><td>Metodos de acesso usados pela interface para preencher tabelas e relatorios.</td></tr>
+      <tr><td><code>toString()</code></td><td>Retorna uma representacao textual curta do token, util para debug.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>5. Classe Lexer.java</h2>
+  <p>
+    A classe <code>Lexer</code> contem o analisador lexico propriamente dito. Ela recebe uma string com o codigo
+    inteiro e usa dois contadores principais: <code>pos</code>, que indica a posicao atual no texto, e
+    <code>linha</code>, que indica a linha atual. Tambem possui duas listas: <code>tokens</code> e <code>erros</code>.
+  </p>
+
+  <h3>Palavras reservadas</h3>
+  <p>
+    O conjunto <code>PALAVRAS_RESERVADAS</code> lista termos da linguagem Pascal que nao devem ser classificados
+    como nomes comuns. Exemplos: <code>program</code>, <code>var</code>, <code>begin</code>, <code>end</code>,
+    <code>if</code>, <code>while</code>, <code>function</code> e <code>procedure</code>.
+  </p>
+
+  <h3>Fluxo principal da analise</h3>
+  <pre>while (pos &lt; codigo.length()) {
+    char atual = codigo.charAt(pos);
+
+    if (Character.isWhitespace(atual)) consumirEspaco();
+    else if (atual == '{') reconhecerComentarioChaves();
+    else if (atual == '(' &amp;&amp; proximoEh('*')) reconhecerComentarioParenteses();
+    else if (atual == '/' &amp;&amp; proximoEh('/')) reconhecerComentarioLinha();
+    else if (Character.isLetter(atual)) reconhecerIdentificadorOuReservada();
+    else if (Character.isDigit(atual)) reconhecerNumero();
+    else if (atual == '\'') reconhecerString();
+    else reconhecerSimbolo();
+}</pre>
+
+  <h3>Metodos de Lexer</h3>
+  <table>
+    <thead>
+      <tr><th>Metodo</th><th>O que faz</th><th>Como foi implementado</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>Lexer(String codigo)</code></td>
+        <td>Recebe o codigo que sera analisado.</td>
+        <td>Guarda a string no atributo <code>codigo</code>. A analise real so comeca em <code>analisar()</code>.</td>
+      </tr>
+      <tr>
+        <td><code>analisar()</code></td>
+        <td>Executa a analise lexica completa.</td>
+        <td>Limpa listas anteriores, reinicia <code>pos</code> e <code>linha</code>, percorre todo o texto e chama metodos especificos conforme o caractere atual. No fim adiciona o token <code>EOF</code>.</td>
+      </tr>
+      <tr>
+        <td><code>consumirEspaco()</code></td>
+        <td>Ignora espacos, tabs e quebras de linha.</td>
+        <td>Se encontrar <code>\n</code>, incrementa o contador de linha. Depois avanca uma posicao.</td>
+      </tr>
+      <tr>
+        <td><code>reconhecerIdentificadorOuReservada()</code></td>
+        <td>Reconhece palavras e nomes definidos pelo programador.</td>
+        <td>Monta um texto enquanto houver letra, digito ou sublinhado. Depois compara a versao minuscula com <code>PALAVRAS_RESERVADAS</code>.</td>
+      </tr>
+      <tr>
+        <td><code>reconhecerNumero()</code></td>
+        <td>Reconhece numeros inteiros e reais.</td>
+        <td>Primeiro consome digitos. Se encontrar ponto seguido de digito e nao for intervalo <code>..</code>, continua consumindo a parte decimal e classifica como real.</td>
+      </tr>
+      <tr>
+        <td><code>reconhecerString()</code></td>
+        <td>Reconhece textos delimitados por aspas simples.</td>
+        <td>Comeca na aspa inicial, acumula caracteres ate a aspa final e registra erro se chegar em quebra de linha ou fim do codigo sem fechar.</td>
+      </tr>
+      <tr>
+        <td><code>reconhecerComentarioChaves()</code></td>
+        <td>Reconhece comentarios no formato <code>{ ... }</code>.</td>
+        <td>Consome caracteres ate encontrar <code>}</code>. Atualiza linha em quebras de linha. Se nao fechar, registra erro.</td>
+      </tr>
+      <tr>
+        <td><code>reconhecerComentarioParenteses()</code></td>
+        <td>Reconhece comentarios no formato <code>(* ... *)</code>.</td>
+        <td>Avanca duas posicoes para pular <code>(* </code>, procura a sequencia <code>*)</code> e registra erro se nao encontrar.</td>
+      </tr>
+      <tr>
+        <td><code>reconhecerComentarioLinha()</code></td>
+        <td>Reconhece comentarios iniciados por <code>//</code>.</td>
+        <td>Consome caracteres ate a quebra de linha. Esse comentario termina automaticamente no fim da linha.</td>
+      </tr>
+      <tr>
+        <td><code>reconhecerSimbolo()</code></td>
+        <td>Reconhece operadores e separadores.</td>
+        <td>Usa <code>switch</code> para tratar <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>:</code>, <code>.</code>, virgula, ponto e virgula, parenteses e colchetes.</td>
+      </tr>
+      <tr>
+        <td><code>adicionarSimbolo()</code></td>
+        <td>Adiciona token de simbolo simples.</td>
+        <td>Cria um <code>Token</code> com linha atual e avanca <code>pos</code> em uma unidade.</td>
+      </tr>
+      <tr>
+        <td><code>adicionarSimboloDuplo()</code></td>
+        <td>Adiciona token composto por dois caracteres.</td>
+        <td>Cria um <code>Token</code> e avanca <code>pos</code> em duas unidades. Usado para <code>&lt;=</code>, <code>&lt;&gt;</code>, <code>&gt;=</code>, <code>:=</code> e <code>..</code>.</td>
+      </tr>
+      <tr>
+        <td><code>proximoEh(char esperado)</code></td>
+        <td>Verifica o proximo caractere sem avancar a leitura.</td>
+        <td>Confere se existe posicao seguinte e se ela contem o caractere esperado.</td>
+      </tr>
+      <tr>
+        <td><code>getErros()</code></td>
+        <td>Retorna a lista de erros encontrados.</td>
+        <td>Devolve uma nova lista para evitar alteracao direta da lista interna.</td>
+      </tr>
+      <tr>
+        <td><code>isPalavraReservada(String palavra)</code></td>
+        <td>Informa se uma palavra pertence ao conjunto reservado.</td>
+        <td>Converte para minusculas e consulta o conjunto <code>PALAVRAS_RESERVADAS</code>.</td>
+      </tr>
+      <tr>
+        <td><code>getPalavrasReservadas()</code></td>
+        <td>Retorna as palavras reservadas cadastradas.</td>
+        <td>Usa <code>Collections.unmodifiableSet</code> para impedir alteracao externa do conjunto.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 class="page-break">6. Classes e metodos de Clone.java</h2>
+  <p>
+    A classe <code>Clone</code> e a janela principal da IDE. Ela estende <code>JFrame</code>, que e a classe do Swing
+    usada para criar janelas. Esse arquivo concentra a interface visual e as acoes do usuario.
+  </p>
+
+  <h3>Atributos principais</h3>
+  <table>
+    <thead>
+      <tr><th>Atributo</th><th>Funcao</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>editorArea</code></td><td>Area principal onde o usuario escreve o codigo.</td></tr>
+      <tr><td><code>lineNumberPanel</code></td><td>Painel lateral que desenha os numeros das linhas do editor.</td></tr>
+      <tr><td><code>statusLabel</code>, <code>posLabel</code>, <code>fileLabel</code></td><td>Labels da barra de status, posicao do cursor e arquivo atual.</td></tr>
+      <tr><td><code>tokenTableModel</code>, <code>errorTableModel</code></td><td>Modelos de dados das tabelas de tokens e erros.</td></tr>
+      <tr><td><code>ultimosTokens</code>, <code>ultimosErros</code></td><td>Guardam o resultado mais recente da analise.</td></tr>
+      <tr><td><code>currentFile</code>, <code>modified</code></td><td>Controlam o arquivo aberto e se ha alteracoes nao salvas.</td></tr>
+      <tr><td><code>undoManager</code></td><td>Controla desfazer e refazer no editor.</td></tr>
+      <tr><td><code>currentTheme</code></td><td>Tema visual aplicado na interface.</td></tr>
+      <tr><td><code>aplicandoDestaque</code></td><td>Evita loop ao aplicar destaque de sintaxe no documento.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Classes internas</h3>
+  <table>
+    <thead>
+      <tr><th>Classe interna</th><th>Responsabilidade</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>Theme</code></td><td>Guarda as cores de um tema: fundo, painel, texto, borda, palavras-chave, numeros, strings e comentarios.</td></tr>
+      <tr><td><code>ClassePillRenderer</code></td><td>Renderizador personalizado para exibir a classe do token com aparencia de etiqueta colorida na tabela.</td></tr>
+      <tr><td><code>LineNumberPanel</code></td><td>Painel que calcula e desenha os numeros das linhas ao lado do editor.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Metodos de construcao da interface</h3>
+  <table>
+    <thead>
+      <tr><th>Metodo</th><th>O que faz</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>Clone()</code></td><td>Construtor da janela. Define titulo, tamanho, comportamento de fechamento, tema inicial, monta a interface e registra eventos.</td></tr>
+      <tr><td><code>buildUI()</code></td><td>Organiza a estrutura principal da janela: barra de titulo, area de trabalho e barra de status.</td></tr>
+      <tr><td><code>buildTitleBar()</code></td><td>Cria a barra superior com titulo, menu e controles principais.</td></tr>
+      <tr><td><code>buildMenuBar()</code></td><td>Cria menus como Arquivo, Editar, Exibir e Ajuda, ligando cada item a uma acao.</td></tr>
+      <tr><td><code>menu()</code>, <code>menuItem()</code></td><td>Metodos auxiliares para criar menus e itens de menu com estilo padrao.</td></tr>
+      <tr><td><code>styleMenu()</code>, <code>styleMenuItem()</code></td><td>Aplicam fonte e aparencia consistente aos menus.</td></tr>
+      <tr><td><code>buildWorkspace()</code></td><td>Monta a area central com barra lateral, editor e resultados.</td></tr>
+      <tr><td><code>buildSidebar()</code></td><td>Cria botoes laterais para funcoes rapidas, como novo, abrir, salvar e analisar.</td></tr>
+      <tr><td><code>sidebarBtn()</code>, <code>sidebarSep()</code></td><td>Criam botoes e separadores reutilizaveis para a barra lateral.</td></tr>
+      <tr><td><code>buildEditorSection()</code></td><td>Monta o bloco do editor, incluindo aba, barra compacta e painel de texto.</td></tr>
+      <tr><td><code>buildEditorTabBar()</code></td><td>Mostra a area visual de aba do arquivo aberto.</td></tr>
+      <tr><td><code>buildCompactToolbar()</code></td><td>Cria botoes de execucao, exportacao, fonte, tema e IA.</td></tr>
+      <tr><td><code>tbBtn()</code>, <code>tbDiv()</code></td><td>Auxiliares para botoes e divisores da barra de ferramentas.</td></tr>
+      <tr><td><code>buildEditorPane()</code></td><td>Cria o <code>JTextPane</code>, adiciona numeracao de linha, scroll e listeners de mudanca.</td></tr>
+      <tr><td><code>buildResultsSection()</code></td><td>Monta a regiao inferior/lateral onde aparecem tokens e erros.</td></tr>
+      <tr><td><code>buildResultsTabs()</code></td><td>Cria abas para tabela de tokens e tabela de erros, com campos de pesquisa.</td></tr>
+      <tr><td><code>buildStyledTable()</code></td><td>Cria uma tabela Swing com estilos padronizados e sem edicao direta.</td></tr>
+      <tr><td><code>buildStatusBar()</code></td><td>Cria a barra inferior de status com informacoes de arquivo, cursor, tokens e erros.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Metodos de filtragem, navegacao e resultados</h3>
+  <table>
+    <thead>
+      <tr><th>Metodo</th><th>O que faz</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>filtrarTokens()</code></td><td>Filtra a tabela de tokens de acordo com o texto digitado no campo de pesquisa.</td></tr>
+      <tr><td><code>filtrarErros()</code></td><td>Filtra a tabela de erros usando o texto de busca.</td></tr>
+      <tr><td><code>irParaErroSelecionado()</code></td><td>Quando o usuario seleciona um erro, tenta mover o cursor para a linha correspondente.</td></tr>
+      <tr><td><code>extrairEIrParaLinhaDoErro(String erro)</code></td><td>Extrai o numero da linha da mensagem de erro e chama <code>irParaLinha()</code>.</td></tr>
+      <tr><td><code>irParaLinha(int linha)</code></td><td>Calcula a posicao inicial da linha no documento e posiciona o cursor do editor.</td></tr>
+      <tr><td><code>atualizarResultados()</code></td><td>Preenche as tabelas com os tokens e erros da ultima analise.</td></tr>
+      <tr><td><code>limparResultados()</code></td><td>Remove linhas das tabelas e zera contadores quando nao ha analise valida.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Metodos de arquivo e acoes do usuario</h3>
+  <table>
+    <thead>
+      <tr><th>Metodo</th><th>O que faz</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>acaoNovo()</code></td><td>Cria um novo documento, depois de confirmar descarte de alteracoes se necessario.</td></tr>
+      <tr><td><code>acaoAbrir()</code></td><td>Abre um arquivo escolhido pelo usuario e carrega seu conteudo no editor.</td></tr>
+      <tr><td><code>acaoSalvar()</code></td><td>Salva no arquivo atual. Se nao houver arquivo, chama <code>acaoSalvarComo()</code>.</td></tr>
+      <tr><td><code>acaoSalvarComo()</code></td><td>Abre seletor de arquivo para o usuario escolher onde salvar.</td></tr>
+      <tr><td><code>acaoSair()</code></td><td>Fecha a aplicacao apos confirmar se existem mudancas nao salvas.</td></tr>
+      <tr><td><code>buildFileChooser()</code></td><td>Configura o seletor de arquivos usado para abrir e salvar.</td></tr>
+      <tr><td><code>acaoAnalisar()</code></td><td>Pega o texto do editor, cria um <code>Lexer</code>, executa <code>analisar()</code>, guarda tokens e erros e atualiza a interface.</td></tr>
+      <tr><td><code>acaoCarregarExemplo()</code></td><td>Insere no editor um exemplo de codigo Mini Pascal para teste rapido.</td></tr>
+      <tr><td><code>acaoExportarResultado()</code></td><td>Exporta o resultado da analise para arquivo, usando o texto produzido por <code>gerarRelatorio()</code>.</td></tr>
+      <tr><td><code>gerarRelatorio()</code></td><td>Monta o conteudo textual/CSV com tokens e erros da ultima analise.</td></tr>
+      <tr><td><code>csv(String s)</code></td><td>Prepara texto para ser salvo em formato CSV, tratando aspas e separadores.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Metodos de aparencia, fonte e destaque</h3>
+  <table>
+    <thead>
+      <tr><th>Metodo</th><th>O que faz</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>resolveFont(String name, int size)</code></td><td>Escolhe uma fonte monoespacada disponivel ou usa alternativa padrao.</td></tr>
+      <tr><td><code>updateEditorFont()</code></td><td>Aplica nome e tamanho da fonte atual no editor e atualiza a numeracao.</td></tr>
+      <tr><td><code>changeFontSize(int delta)</code></td><td>Aumenta ou diminui o tamanho da fonte.</td></tr>
+      <tr><td><code>dialogFontSize()</code></td><td>Abre uma janela para informar tamanho da fonte manualmente.</td></tr>
+      <tr><td><code>applyTheme(Theme t)</code></td><td>Aplica cores do tema no editor, paines, tabelas e componentes da interface.</td></tr>
+      <tr><td><code>applyThemeToTable(JTable table, Theme t)</code></td><td>Aplica cores e selecao visual em uma tabela especifica.</td></tr>
+      <tr><td><code>destacarPalavrasReservadas()</code></td><td>Aplica coloracao no editor para palavras reservadas, numeros, strings e comentarios.</td></tr>
+      <tr><td><code>attr(Color fg, boolean bold, boolean italic)</code></td><td>Cria um conjunto de atributos de texto para destaque.</td></tr>
+      <tr><td><code>highlight(...)</code></td><td>Procura padroes por expressao regular e aplica estilo no trecho encontrado.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Metodos de estado e utilidade</h3>
+  <table>
+    <thead>
+      <tr><th>Metodo</th><th>O que faz</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>onChange()</code></td><td>Executado quando o texto muda. Marca o arquivo como modificado, atualiza titulo, posicao e destaque.</td></tr>
+      <tr><td><code>updatePosition()</code></td><td>Calcula linha e coluna atuais do cursor e mostra na barra de status.</td></tr>
+      <tr><td><code>updateTitle()</code></td><td>Atualiza o titulo da janela, incluindo marcador de modificacao quando o arquivo nao foi salvo.</td></tr>
+      <tr><td><code>setStatus(String msg)</code></td><td>Mostra uma mensagem curta na barra de status.</td></tr>
+      <tr><td><code>confirmarDescarte()</code></td><td>Pergunta ao usuario se deseja descartar alteracoes nao salvas.</td></tr>
+      <tr><td><code>erro(String msg)</code></td><td>Mostra uma caixa de mensagem de erro.</td></tr>
+      <tr><td><code>main(String[] args)</code></td><td>Ponto de entrada do programa. Inicializa a interface Swing.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Metodos de IA local</h3>
+  <table>
+    <thead>
+      <tr><th>Metodo</th><th>O que faz</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>sugerirCorrecaoComIA()</code></td>
+        <td>Cria um prompt com o codigo e os erros encontrados, chama o modelo local e mostra sugestoes ao usuario.</td>
+      </tr>
+      <tr>
+        <td><code>chamarLLM(String prompt)</code></td>
+        <td>Envia uma requisicao HTTP para <code>http://localhost:11434/api/generate</code>, usando o modelo <code>codellama:7b</code>. Depende do Ollama estar rodando localmente.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 class="page-break">7. Como a implementacao foi pensada</h2>
+  <p>
+    A implementacao separa a logica da analise lexica da interface grafica. Essa divisao e importante porque
+    <code>Lexer</code> pode ser estudado e testado sem depender do Swing, enquanto <code>Clone</code> fica
+    responsavel por mostrar dados e receber a interacao do usuario.
+  </p>
+  <p>
+    O <code>Lexer</code> usa uma tecnica comum em compiladores simples: leitura sequencial com um indice.
+    Em vez de tentar interpretar o programa completo, ele olha apenas o caractere atual e, quando necessario,
+    olha o proximo caractere com <code>proximoEh()</code>. Isso permite reconhecer simbolos compostos como
+    <code>:=</code>, <code>&lt;=</code> e <code>..</code>.
+  </p>
+  <p>
+    A interface foi implementada com Swing porque ele ja oferece componentes prontos, como <code>JFrame</code>,
+    <code>JTextPane</code>, <code>JTable</code>, <code>JMenuBar</code>, <code>JScrollPane</code> e
+    <code>JFileChooser</code>. O codigo personaliza esses componentes para parecer uma IDE: editor com fonte
+    monoespacada, numeracao de linhas, temas escuros, barra lateral e tabelas de resultados.
+  </p>
+
+  <h2>8. Exemplo de entrada e saida</h2>
+  <p>Codigo de entrada:</p>
+  <pre>program Escola;
+var
+  idade: integer;
+begin
+  idade := 18;
+end.</pre>
+  <p>Tokens esperados:</p>
+  <table>
+    <thead>
+      <tr><th>Lexema</th><th>Classe</th><th>Descricao</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>program</code></td><td><code>PALAVRA_RESERVADA</code></td><td>Palavra com significado fixo.</td></tr>
+      <tr><td><code>Escola</code></td><td><code>IDENTIFICADOR</code></td><td>Nome criado pelo programador.</td></tr>
+      <tr><td><code>idade</code></td><td><code>IDENTIFICADOR</code></td><td>Nome criado pelo programador.</td></tr>
+      <tr><td><code>integer</code></td><td><code>PALAVRA_RESERVADA</code></td><td>Tipo inteiro da linguagem.</td></tr>
+      <tr><td><code>:=</code></td><td><code>ATRIBUICAO</code></td><td>Atribuicao de valor.</td></tr>
+      <tr><td><code>18</code></td><td><code>NUMERO_INTEIRO</code></td><td>Numero sem parte decimal.</td></tr>
+      <tr><td><code>EOF</code></td><td><code>FIM_ARQUIVO</code></td><td>Marcador de fim da entrada.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>9. Pontos fortes e limitacoes</h2>
+  <table>
+    <thead>
+      <tr><th>Pontos fortes</th><th>Limitacoes</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Codigo dividido em modelo, analisador e interface.</td>
+        <td>A analise e apenas lexica; nao valida gramatica completa do Pascal.</td>
+      </tr>
+      <tr>
+        <td>Reconhece palavras reservadas, identificadores, numeros, strings, comentarios, operadores e separadores.</td>
+        <td>Strings usam regra simples e nao tratam todos os escapes possiveis.</td>
+      </tr>
+      <tr>
+        <td>Mostra erros com linha e permite navegar ate a linha do erro.</td>
+        <td>A sugestao por IA depende de Ollama local e do modelo instalado.</td>
+      </tr>
+      <tr>
+        <td>Interface facilita estudo visual dos tokens.</td>
+        <td>O arquivo <code>Clone.java</code> concentra muitas responsabilidades e poderia ser dividido em classes menores.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>10. Conclusao</h2>
+  <p>
+    O projeto e uma boa base didatica para entender a primeira fase de um compilador. A classe <code>Lexer</code>
+    mostra como transformar texto bruto em tokens classificados. A classe <code>Token</code> organiza os dados de
+    cada unidade reconhecida. A classe <code>Clone</code> transforma tudo isso em uma ferramenta visual, permitindo
+    escrever codigo, executar a analise, ver resultados, filtrar informacoes, exportar relatorios e estudar erros.
+  </p>
+  <p>
+    Para evoluir o projeto, o proximo passo natural seria criar um analisador sintatico, responsavel por verificar
+    se a ordem dos tokens forma comandos validos segundo a gramatica da linguagem.
+  </p>
+</body>
+</html>
